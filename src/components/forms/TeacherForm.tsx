@@ -31,7 +31,6 @@ const TeacherForm = ({
     resolver: zodResolver(teacherSchema),
   });
 
-  const [img, setImg] = useState<any>();
 
   const [state, formAction] = useFormState(
     type === "create" ? createTeacher : updateTeacher,
@@ -43,7 +42,7 @@ const TeacherForm = ({
 
   const onSubmit = handleSubmit((data) => {
     console.log(data);
-    formAction({ ...data, img: img?.secure_url });
+    formAction(data);
   });
 
   const router = useRouter();
@@ -185,11 +184,7 @@ const TeacherForm = ({
         </div>
         <CldUploadWidget
           uploadPreset="school"
-          onSuccess={(result, { widget }) => {
-            setImg(result.info);
-            widget.close();
-          }}
-        >
+          onSuccess={result=>console.log(result)}>
           {({ open }) => {
             return (
               <div

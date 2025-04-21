@@ -191,3 +191,17 @@ enum Day {
   THURSDAY
   FRIDAY
 }
+
+model RegistrationRequest {
+  id        String   @id @default(cuid())
+  firstName String
+  lastName  String
+  email     String   @unique
+  phone     String?
+  role      String
+  institution String
+  message   String?
+  approved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

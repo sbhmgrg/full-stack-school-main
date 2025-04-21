@@ -3,10 +3,8 @@
 
 import { useState } from 'react';
 import { useSignIn } from '@clerk/nextjs';
-import { useRouter } from 'next/navigation';
 
 export default function SignInPage() {
-  const router = useRouter();
   const { isLoaded, signIn, setActive } = useSignIn();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -23,24 +21,23 @@ export default function SignInPage() {
       });
 
       if (result.status === 'complete') {
+        console.log('Sign in successful, setting session...');
         await setActive({ session: result.createdSessionId });
-        router.push('/dashboard'); // or redirect based on role if needed
+        console.log('Session set, redirecting...');
+        window.location.href = '/admin'; // Hard redirect
       }
     } catch (err: any) {
-      setError(err.errors?.[0]?.message || 'Sign-in failed.');
+      console.error('Sign in error:', err);
+      setError(err.errors?.[0]?.message || 'Sign-in failed. Please try again.');
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-8 rounded shadow-md w-full max-w-md"
-      >
+      <form onSubmit={handleSubmit} className="bg-white p-8 rounded shadow-md w-full max-w-md">
         <h2 className="text-2xl font-bold mb-6 text-center">Sign In</h2>
-
-        {error && <p className="text-red-600 mb-4">{error}</p>}
-
+        {error && <p className="text-red-600 mb-4 text-center">{error}</p>}
+        
         <input
           type="email"
           placeholder="Email"
@@ -49,7 +46,7 @@ export default function SignInPage() {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-
+        
         <input
           type="password"
           placeholder="Password"
@@ -58,7 +55,7 @@ export default function SignInPage() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-
+        
         <button
           type="submit"
           className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
